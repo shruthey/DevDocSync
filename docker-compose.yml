@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  fastapi:
+    build:
+      context: ./backend/fastapi_app
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/fastapi_app:/app
+    environment:
+      - DATABASE_URL=postgresql://devdoc:password@db/devdocsync
+    depends_on:
+      - db
+
+  react:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: react_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: devdoc
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: devdocsync
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
