@@ -1,12 +1,12 @@
 services:
   fastapi:
     build:
-      context: ./backend
+      context: .
     container_name: fastapi_app
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - .:/app
     environment:
       - DATABASE_URL=postgresql://devdoc:password@db/devdocsync
     depends_on:
@@ -14,13 +14,13 @@ services:
 
   react:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: Dockerfile
     container_name: react_frontend
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend:/app
+      - ../frontend:/app
       - /app/node_modules
     stdin_open: true
     tty: true
