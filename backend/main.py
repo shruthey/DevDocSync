@@ -17,9 +17,25 @@ app = FastAPI(
 )
 
 # Allow frontend (React) to communicate with FastAPI
+import os
+allowed_origins = [
+    "http://localhost:5173", 
+    "http://localhost:5174", 
+    "http://localhost:3000"
+]
+
+# Add production frontend URL if available
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    allowed_origins.append(frontend_url)
+
+# Allow any .onrender.com domain in production
+if os.getenv("RENDER"):
+    allowed_origins.append("https://*.onrender.com")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

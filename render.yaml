@@ -1,0 +1,35 @@
+databases:
+  - name: devdocsync-db
+    databaseName: devdocsync
+    user: devdoc
+
+services:
+  # Backend API Service
+  - type: web
+    name: devdocsync-api
+    env: python
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: devdocsync-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: "3.11.5"
+      - key: FRONTEND_URL
+        value: "https://devdocsync-frontend.onrender.com"
+      - key: RENDER
+        value: "true"
+
+  # Frontend Service
+  - type: web
+    name: devdocsync-frontend
+    env: node
+    buildCommand: "cd frontend && npm install && npm run build"
+    startCommand: "cd frontend && npm run preview -- --port $PORT --host 0.0.0.0"
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+      - key: VITE_API_URL
+        value: "https://devdocsync-api.onrender.com"
