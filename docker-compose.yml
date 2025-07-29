@@ -1,12 +1,12 @@
 services:
   fastapi:
     build:
-      context: ./backend/fastapi_app
+      context: ./backend
     container_name: fastapi_app
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/fastapi_app:/app
+      - ./backend:/app
     environment:
       - DATABASE_URL=postgresql://devdoc:password@db/devdocsync
     depends_on:

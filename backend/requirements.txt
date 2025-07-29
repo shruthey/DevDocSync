@@ -13,3 +13,6 @@ email-validator
 fastapi-users[sqlalchemy]
 markdown2
 reportlab
+aiosqlite
+psycopg2-binary
+asyncpg
